@@ -54,6 +54,7 @@ class SearchControllerImplementation implements SearchController {
       }
 
       exploredTiles++;
+      provider.updateResultSteps(exploredTiles);
 
       if (node.state == end) {
         List<String> actions = [];

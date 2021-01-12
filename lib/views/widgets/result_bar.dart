@@ -22,7 +22,7 @@ class ResultBar extends StatelessWidget {
           ),
           SizedBox(height: 8),
           Text(
-            "Search duration: ${homeViewProvider.elapsedTime.inMicroseconds.toString()} ms",
+            "Search duration: ${homeViewProvider.elapsedTime.inMicroseconds.toString()} μs",
           ),
         ],
       ),

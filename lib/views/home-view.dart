@@ -4,10 +4,10 @@ import 'package:maze_search_ai/controllers/search_controller.dart';
 import 'package:maze_search_ai/controllers/search_controller_impl.dart';
 import 'package:maze_search_ai/providers/home_view_provider.dart';
 import 'package:maze_search_ai/views/widgets/cell.dart';
+import 'package:maze_search_ai/views/widgets/help_dialog.dart';
 import 'package:maze_search_ai/views/widgets/result_bar.dart';
 import 'package:maze_search_ai/views/widgets/tool_bar.dart';
 import 'package:provider/provider.dart';
-import 'package:tuple/tuple.dart';
 
 enum CellState { wall, path, start, end, visited, solution }
 enum SearchAlgo { dfs, bfs, a, gbs }
@@ -23,6 +23,17 @@ class HomeView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("Maze optimal path"),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.help),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => HelpDialog(),
+              );
+            },
+          )
+        ],
       ),
       body: Column(
         children: [
@@ -94,21 +105,21 @@ class HomeView extends StatelessWidget {
                   ),
                   ElevatedButton(
                     onPressed: () async {
-                      Tuple3 result;
                       SearchController searchController =
                           SearchControllerImplementation();
                       var homeViewProvider = context.read<HomeViewProvider>();
+                      homeViewProvider.resetResults();
 
                       homeViewProvider.startTimer();
 
                       switch (selectedSearchAlgo) {
                         case SearchAlgo.dfs:
-                          result = await searchController.startSearch(
+                          await searchController.startSearch(
                               cells, homeViewProvider,
                               deepFirstSearch: true, delayed: delayed);
                           break;
                         case SearchAlgo.bfs:
-                          result = await searchController.startSearch(
+                          await searchController.startSearch(
                               cells, homeViewProvider,
                               deepFirstSearch: false, delayed: delayed);
                           break;
@@ -119,7 +130,6 @@ class HomeView extends StatelessWidget {
                           searchController.startGBS(cells);
                           break;
                       }
-                      homeViewProvider.updateResultSteps(result.item3);
                       homeViewProvider.stopTimer();
                     },
                     child: Text("Start Search"),

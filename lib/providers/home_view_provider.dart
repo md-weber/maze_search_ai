@@ -42,6 +42,11 @@ class HomeViewProvider extends ChangeNotifier {
 
   void updateSearchAlgo(SearchAlgo algorithm) {
     this._selectedSearchAlgo = algorithm;
+    resetResults();
+    notifyListeners();
+  }
+
+  void resetResults() {
     _resultSteps = 0;
     _elapsedTime = Duration();
     for (var cell in _cells) {
@@ -49,7 +54,6 @@ class HomeViewProvider extends ChangeNotifier {
         _cells[_cells.indexOf(cell)] = CellState.path;
       }
     }
-    notifyListeners();
   }
 
   void resetAll() {
