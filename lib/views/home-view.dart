@@ -19,40 +19,40 @@ class HomeView extends StatelessWidget {
     final cells = homeViewProvider.cells;
     final selectedSearchAlgo = homeViewProvider.selectedSearchAlgo;
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Maze optimal path"),
-        ),
-        body: Column(
-          children: [
-            ToolBar(),
-            ResultBar(),
-            Expanded(
-              flex: 8,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 8),
-                  itemCount: cells.length,
-                  itemBuilder: (context, index) {
-                    return Cell(
-                      type: cells[index],
-                      onTap: () {
-                        if (activeTool == CellState.start ||
-                            activeTool == CellState.end)
-                          cleanOldStartingPoint(cells, activeTool);
+      appBar: AppBar(
+        title: Text("Maze optimal path"),
+      ),
+      body: Column(
+        children: [
+          ToolBar(),
+          ResultBar(),
+          Expanded(
+            flex: 8,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 8),
+                itemCount: cells.length,
+                itemBuilder: (context, index) {
+                  return Cell(
+                    type: cells[index],
+                    onTap: () {
+                      if (activeTool == CellState.start ||
+                          activeTool == CellState.end)
+                        cleanOldStartingPoint(cells, activeTool);
 
-                        context
-                            .read<HomeViewProvider>()
-                            .updateCell(index, activeTool);
-                      },
-                    );
-                  },
-                ),
+                      context
+                          .read<HomeViewProvider>()
+                          .updateCell(index, activeTool);
+                    },
+                  );
+                },
               ),
             ),
-            Expanded(
-                child: Padding(
+          ),
+          Expanded(
+            child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 8),
               child: Row(
                 children: [
@@ -113,9 +113,11 @@ class HomeView extends StatelessWidget {
                   )
                 ],
               ),
-            ))
-          ],
-        ));
+            ),
+          )
+        ],
+      ),
+    );
   }
 
   void cleanOldStartingPoint(List<CellState> cells, CellState activeTool) {

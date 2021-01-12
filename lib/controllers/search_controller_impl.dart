@@ -43,7 +43,11 @@ class SearchControllerImplementation implements SearchController {
       }
 
       Node node = frontier.remove();
-      provider.updateCell(node.state, CellState.visited);
+
+      // Showing the visited tiles - ignoring the first
+      if (exploredTiles != 0)
+        provider.updateCell(node.state, CellState.visited);
+
       exploredTiles++;
 
       if (node.state == end) {
@@ -55,6 +59,8 @@ class SearchControllerImplementation implements SearchController {
           cells.add(node.state);
           node = node.parent;
         }
+        provider.updateCell(cells.first, CellState.end);
+
         actions.reversed;
         cells.reversed;
         return Tuple3<List<String>, List<num>, num>(

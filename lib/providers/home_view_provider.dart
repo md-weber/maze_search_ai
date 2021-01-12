@@ -41,6 +41,13 @@ class HomeViewProvider extends ChangeNotifier {
 
   void updateSearchAlgo(SearchAlgo algorithm) {
     this._selectedSearchAlgo = algorithm;
+    _resultSteps = 0;
+    _elapsedTime = Duration();
+    for (var cell in _cells) {
+      if (cell == CellState.solution || cell == CellState.visited) {
+        _cells[_cells.indexOf(cell)] = CellState.path;
+      }
+    }
     notifyListeners();
   }
 

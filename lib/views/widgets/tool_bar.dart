@@ -45,6 +45,8 @@ class ToolBar extends StatelessWidget {
           const Spacer(),
           IconButton(
               icon: Icon(Icons.clear),
+              color: Color(0xFFFF0000),
+              tooltip: "Clear everything",
               onPressed: () {
                 context.read<HomeViewProvider>().resetAll();
               }),
