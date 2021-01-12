@@ -157,7 +157,6 @@ class HomeView extends StatelessWidget {
     var oldStartingPoint = cells.indexOf(activeTool);
 
     if (oldStartingPoint > 0) {
-      print(oldStartingPoint);
       cells[oldStartingPoint] = CellState.path;
     }
   }
