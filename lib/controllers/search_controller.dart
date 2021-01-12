@@ -4,7 +4,11 @@ import 'package:tuple/tuple.dart';
 
 abstract class SearchController {
   Future<Tuple3<List<String>, List<num>, num>> startSearch(
-      List<CellState> cells, HomeViewProvider provider, bool deepFirstSearch);
+    List<CellState> cells,
+    HomeViewProvider provider, {
+    bool deepFirstSearch,
+    bool delayed,
+  });
 
   Tuple3<List<String>, List<num>, num> startBFS(List<CellState> cells);
 

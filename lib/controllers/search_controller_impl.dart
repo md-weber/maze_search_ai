@@ -24,7 +24,8 @@ class SearchControllerImplementation implements SearchController {
 
   @override
   Future<Tuple3<List<String>, List<num>, num>> startSearch(
-      cells, HomeViewProvider provider, bool deepFirstSearch) async {
+      cells, HomeViewProvider provider,
+      {bool deepFirstSearch, bool delayed}) async {
     getMazeInformation(cells);
 
     // Here our search starts
@@ -45,8 +46,12 @@ class SearchControllerImplementation implements SearchController {
       Node node = frontier.remove();
 
       // Showing the visited tiles - ignoring the first
-      if (exploredTiles != 0)
+      if (exploredTiles != 0) {
         provider.updateCell(node.state, CellState.visited);
+        if (delayed) {
+          await Future.delayed(Duration(milliseconds: 500));
+        }
+      }
 
       exploredTiles++;
 

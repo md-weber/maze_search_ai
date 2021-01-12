@@ -4,6 +4,7 @@ import 'package:maze_search_ai/views/home-view.dart';
 class HomeViewProvider extends ChangeNotifier {
   CellState _activeTool;
   List<CellState> _cells = [];
+  bool _delayed = false;
   SearchAlgo _selectedSearchAlgo = SearchAlgo.dfs;
   num _resultSteps = 0;
   Stopwatch _stopwatch;
@@ -63,6 +64,11 @@ class HomeViewProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void toggleDelayed(bool value) {
+    _delayed = value;
+    notifyListeners();
+  }
+
   CellState get activeTool => _activeTool;
 
   List<CellState> get cells => _cells;
@@ -72,4 +78,6 @@ class HomeViewProvider extends ChangeNotifier {
   num get resultSteps => _resultSteps;
 
   Duration get elapsedTime => _elapsedTime;
+
+  bool get delayed => _delayed;
 }

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:maze_search_ai/controllers/search_controller.dart';
 import 'package:maze_search_ai/controllers/search_controller_impl.dart';
@@ -15,6 +16,7 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final homeViewProvider = context.watch<HomeViewProvider>();
+    final delayed = homeViewProvider.delayed;
     final activeTool = homeViewProvider.activeTool;
     final cells = homeViewProvider.cells;
     final selectedSearchAlgo = homeViewProvider.selectedSearchAlgo;
@@ -55,6 +57,7 @@ class HomeView extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 8),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   DropdownButton(
                     items: [
@@ -80,7 +83,15 @@ class HomeView extends StatelessWidget {
                       context.read<HomeViewProvider>().updateSearchAlgo(value);
                     },
                   ),
-                  const Spacer(),
+                  SizedBox(
+                    width: 150,
+                    child: CheckboxListTile(
+                        title: Text("delayed"),
+                        value: homeViewProvider.delayed,
+                        onChanged: (value) {
+                          homeViewProvider.toggleDelayed(value);
+                        }),
+                  ),
                   ElevatedButton(
                     onPressed: () async {
                       Tuple3 result;
@@ -93,11 +104,13 @@ class HomeView extends StatelessWidget {
                       switch (selectedSearchAlgo) {
                         case SearchAlgo.dfs:
                           result = await searchController.startSearch(
-                              cells, homeViewProvider, true);
+                              cells, homeViewProvider,
+                              deepFirstSearch: true, delayed: delayed);
                           break;
                         case SearchAlgo.bfs:
                           result = await searchController.startSearch(
-                              cells, homeViewProvider, false);
+                              cells, homeViewProvider,
+                              deepFirstSearch: false, delayed: delayed);
                           break;
                         case SearchAlgo.a:
                           searchController.startA(cells);
