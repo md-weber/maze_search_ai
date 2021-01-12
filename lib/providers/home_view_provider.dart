@@ -6,11 +6,22 @@ class HomeViewProvider extends ChangeNotifier {
   List<CellState> _cells = [];
   SearchAlgo _selectedSearchAlgo = SearchAlgo.dfs;
   num _resultSteps = 0;
+  Stopwatch _stopwatch;
+  Duration _elapsedTime = Duration();
 
   HomeViewProvider() {
     for (var i = 0; i < 64; i++) {
       cells.add(CellState.path);
     }
+  }
+
+  void startTimer() {
+    _stopwatch = Stopwatch()..start();
+  }
+
+  void stopTimer() {
+    _stopwatch..stop();
+    _elapsedTime = _stopwatch.elapsed;
   }
 
   void updateResultSteps(num resultSteps) {
@@ -48,4 +59,6 @@ class HomeViewProvider extends ChangeNotifier {
   SearchAlgo get selectedSearchAlgo => _selectedSearchAlgo;
 
   num get resultSteps => _resultSteps;
+
+  Duration get elapsedTime => _elapsedTime;
 }

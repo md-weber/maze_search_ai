@@ -86,15 +86,18 @@ class HomeView extends StatelessWidget {
                       Tuple3 result;
                       SearchController searchController =
                           SearchControllerImplementation();
+                      var homeViewProvider = context.read<HomeViewProvider>();
+
+                      homeViewProvider.startTimer();
 
                       switch (selectedSearchAlgo) {
                         case SearchAlgo.dfs:
                           result = await searchController.startSearch(
-                              cells, context.read<HomeViewProvider>(), true);
+                              cells, homeViewProvider, true);
                           break;
                         case SearchAlgo.bfs:
                           result = await searchController.startSearch(
-                              cells, context.read<HomeViewProvider>(), false);
+                              cells, homeViewProvider, false);
                           break;
                         case SearchAlgo.a:
                           searchController.startA(cells);
@@ -103,9 +106,8 @@ class HomeView extends StatelessWidget {
                           searchController.startGBS(cells);
                           break;
                       }
-                      context
-                          .read<HomeViewProvider>()
-                          .updateResultSteps(result.item3);
+                      homeViewProvider.updateResultSteps(result.item3);
+                      homeViewProvider.stopTimer();
                     },
                     child: Text("Start Search"),
                   )

@@ -6,16 +6,23 @@ import 'package:provider/provider.dart';
 class ResultBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final homeViewProvider = context.watch<HomeViewProvider>();
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            "Steps taken to find the path: ${context.watch<HomeViewProvider>().resultSteps.toString()}",
-          ),
-          Text(
             "Used search algorithm: ${getSelectedSearchAlgo(context)}",
+          ),
+          SizedBox(height: 8),
+          Text(
+            "Steps taken to find the path: ${homeViewProvider.resultSteps.toString()}",
+          ),
+          SizedBox(height: 8),
+          Text(
+            "Search duration: ${homeViewProvider.elapsedTime.inMicroseconds.toString()} ms",
           ),
         ],
       ),
