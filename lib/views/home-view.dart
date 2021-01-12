@@ -3,6 +3,8 @@ import 'package:maze_search_ai/controllers/search_controller.dart';
 import 'package:maze_search_ai/controllers/search_controller_impl.dart';
 import 'package:maze_search_ai/providers/home_view_provider.dart';
 import 'package:maze_search_ai/views/widgets/cell.dart';
+import 'package:maze_search_ai/views/widgets/result_bar.dart';
+import 'package:maze_search_ai/views/widgets/tool_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
@@ -22,47 +24,8 @@ class HomeView extends StatelessWidget {
         ),
         body: Column(
           children: [
-            SizedBox(
-              height: 100,
-              child: Row(
-                children: [
-                  IconButton(
-                      icon: Icon(Icons.wallet_membership),
-                      onPressed: () {
-                        context
-                            .read<HomeViewProvider>()
-                            .updateActiveTool(CellState.wall);
-                      }),
-                  IconButton(
-                      icon: Icon(Icons.circle),
-                      onPressed: () {
-                        context
-                            .read<HomeViewProvider>()
-                            .updateActiveTool(CellState.path);
-                      }),
-                  IconButton(
-                      icon: Icon(Icons.play_arrow),
-                      onPressed: () {
-                        context
-                            .read<HomeViewProvider>()
-                            .updateActiveTool(CellState.start);
-                      }),
-                  IconButton(
-                      icon: Icon(Icons.recommend),
-                      onPressed: () {
-                        context
-                            .read<HomeViewProvider>()
-                            .updateActiveTool(CellState.end);
-                      }),
-                  const Spacer(),
-                  IconButton(
-                      icon: Icon(Icons.clear),
-                      onPressed: () {
-                        context.read<HomeViewProvider>().resetAll();
-                      }),
-                ],
-              ),
-            ),
+            ToolBar(),
+            ResultBar(),
             Expanded(
               flex: 8,
               child: Padding(
@@ -120,21 +83,18 @@ class HomeView extends StatelessWidget {
                   const Spacer(),
                   ElevatedButton(
                     onPressed: () async {
+                      Tuple3 result;
                       SearchController searchController =
                           SearchControllerImplementation();
 
                       switch (selectedSearchAlgo) {
                         case SearchAlgo.dfs:
-                          Tuple3 dfsResult = await searchController.startSearch(
+                          result = await searchController.startSearch(
                               cells, context.read<HomeViewProvider>(), true);
-                          print("Steps to solve: ${dfsResult.item3}");
-                          print("Actions: ${dfsResult.item1}");
                           break;
                         case SearchAlgo.bfs:
-                          Tuple3 dfsResult = await searchController.startSearch(
+                          result = await searchController.startSearch(
                               cells, context.read<HomeViewProvider>(), false);
-                          print("Steps to solve: ${dfsResult.item3}");
-                          print("Actions: ${dfsResult.item1}");
                           break;
                         case SearchAlgo.a:
                           searchController.startA(cells);
@@ -143,6 +103,9 @@ class HomeView extends StatelessWidget {
                           searchController.startGBS(cells);
                           break;
                       }
+                      context
+                          .read<HomeViewProvider>()
+                          .updateResultSteps(result.item3);
                     },
                     child: Text("Start Search"),
                   )

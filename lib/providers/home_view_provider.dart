@@ -5,11 +5,17 @@ class HomeViewProvider extends ChangeNotifier {
   CellState _activeTool;
   List<CellState> _cells = [];
   SearchAlgo _selectedSearchAlgo = SearchAlgo.dfs;
+  num _resultSteps = 0;
 
   HomeViewProvider() {
     for (var i = 0; i < 64; i++) {
       cells.add(CellState.path);
     }
+  }
+
+  void updateResultSteps(num resultSteps) {
+    _resultSteps = resultSteps;
+    notifyListeners();
   }
 
   void updateActiveTool(CellState newTool) {
@@ -35,9 +41,11 @@ class HomeViewProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  CellState get activeTool => this._activeTool;
+  CellState get activeTool => _activeTool;
 
-  List<CellState> get cells => this._cells;
+  List<CellState> get cells => _cells;
 
-  SearchAlgo get selectedSearchAlgo => this._selectedSearchAlgo;
+  SearchAlgo get selectedSearchAlgo => _selectedSearchAlgo;
+
+  num get resultSteps => _resultSteps;
 }
