@@ -49,6 +49,10 @@ class HomeViewProvider extends ChangeNotifier {
     for (var i = 0; i < 64; i++) {
       cells.add(CellState.path);
     }
+
+    _resultSteps = 0;
+    _elapsedTime = Duration();
+
     notifyListeners();
   }
 
