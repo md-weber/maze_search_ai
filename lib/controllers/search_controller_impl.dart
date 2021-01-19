@@ -1,12 +1,12 @@
 import 'package:maze_search_ai/controllers/search_controller.dart';
 import 'package:maze_search_ai/controllers/utils.dart';
 import 'package:maze_search_ai/providers/home_view_provider.dart';
-import 'package:maze_search_ai/views/home-view.dart';
+import 'package:maze_search_ai/views/home_view.dart';
 import 'package:tuple/tuple.dart';
 
 class SearchControllerImplementation implements SearchController {
-  num start;
-  num end;
+  int start;
+  int end;
   List<num> allWalls = [];
   List<num> allPaths = [];
 
@@ -24,22 +24,25 @@ class SearchControllerImplementation implements SearchController {
 
   @override
   Future<Tuple3<List<String>, List<num>, num>> startSearch(
-      cells, HomeViewProvider provider,
-      {bool deepFirstSearch, bool delayed}) async {
+    List<CellState> cells,
+    HomeViewProvider provider, {
+    bool deepFirstSearch,
+    bool delayed,
+  }) async {
     getMazeInformation(cells);
 
     // Here our search starts
     num exploredTiles = 0;
 
-    Node startNode = Node(start);
-    StackFrontier frontier =
+    final Node startNode = Node(start);
+    final StackFrontier frontier =
         deepFirstSearch ? StackFrontier() : QueueFrontier();
     frontier.add(startNode);
 
-    Set<num> explored = {};
+    final Set<num> explored = {};
 
     while (true) {
-      if (frontier.empty()) {
+      if (frontier.isFrontierEmpty()) {
         throw Exception("There is no solution");
       }
 
@@ -49,7 +52,7 @@ class SearchControllerImplementation implements SearchController {
       if (exploredTiles != 0) {
         provider.updateCell(node.state, CellState.visited);
         if (delayed) {
-          await Future.delayed(Duration(milliseconds: 500));
+          await Future.delayed(const Duration(milliseconds: 500));
         }
       }
 
@@ -57,8 +60,8 @@ class SearchControllerImplementation implements SearchController {
       provider.updateResultSteps(exploredTiles);
 
       if (node.state == end) {
-        List<String> actions = [];
-        List<num> cells = [];
+        final List<String> actions = [];
+        final List<int> cells = [];
         while (node.parent != null) {
           provider.updateCell(node.state, CellState.solution);
           actions.add(node.action);
@@ -75,10 +78,10 @@ class SearchControllerImplementation implements SearchController {
 
       explored.add(node.state);
 
-      for (var entry in _neighbors(cells, node.state).entries) {
+      for (final entry in _neighbors(cells, node.state).entries) {
         if (!explored.contains(entry.value) &&
             !frontier.containsState(entry.value)) {
-          var childNode = Node(entry.value, action: entry.key, parent: node);
+          final childNode = Node(entry.value, action: entry.key, parent: node);
           frontier.add(childNode);
         }
       }
@@ -116,8 +119,9 @@ class SearchControllerImplementation implements SearchController {
     throw UnimplementedError();
   }
 
-  Map<String, num> _neighbors(List<CellState> cells, num state) {
-    Map<String, num> result = {
+  // TODO: Change to a more dynamic way
+  Map<String, int> _neighbors(List<CellState> cells, int state) {
+    final Map<String, int> result = {
       "up": state - 8,
       "down": state + 8,
       "left": state % 8 == 0 ? -1 : state - 1,

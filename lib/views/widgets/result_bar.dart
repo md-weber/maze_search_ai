@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maze_search_ai/providers/home_view_provider.dart';
-import 'package:maze_search_ai/views/home-view.dart';
+import 'package:maze_search_ai/views/home_view.dart';
 import 'package:provider/provider.dart';
 
 class ResultBar extends StatelessWidget {
@@ -16,11 +16,11 @@ class ResultBar extends StatelessWidget {
           Text(
             "Used search algorithm: ${getSelectedSearchAlgo(context)}",
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             "Steps taken to find the path: ${homeViewProvider.resultSteps.toString()}",
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             "Search duration: ${homeViewProvider.elapsedTime.inMicroseconds.toString()} μs",
           ),
@@ -39,6 +39,8 @@ class ResultBar extends StatelessWidget {
         return "A*";
       case SearchAlgo.gbs:
         return "Greedy-Best Search";
+      default:
+        return "";
     }
   }
 }

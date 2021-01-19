@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:maze_search_ai/views/home-view.dart';
+import 'package:maze_search_ai/views/home_view.dart';
 
 class Cell extends StatelessWidget {
   final VoidCallback onTap;
   final CellState type;
 
-  Cell({@required this.onTap, @required this.type});
+  const Cell({@required this.onTap, @required this.type});
 
   @override
   Widget build(BuildContext context) {

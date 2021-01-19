@@ -1,16 +1,20 @@
 import 'package:flutter/cupertino.dart';
-import 'package:maze_search_ai/views/home-view.dart';
+import 'package:maze_search_ai/views/home_view.dart';
 
 class HomeViewProvider extends ChangeNotifier {
   CellState _activeTool;
-  List<CellState> _cells = [];
+
+  // List<List<CellState>> _grid = [];
+  final List<CellState> _cells = [];
   bool _delayed = false;
   SearchAlgo _selectedSearchAlgo = SearchAlgo.dfs;
   num _resultSteps = 0;
   Stopwatch _stopwatch;
-  Duration _elapsedTime = Duration();
+  Duration _elapsedTime = const Duration();
 
   HomeViewProvider() {
+    // TODO: Create rows and columns
+
     for (var i = 0; i < 64; i++) {
       cells.add(CellState.path);
     }
@@ -21,7 +25,7 @@ class HomeViewProvider extends ChangeNotifier {
   }
 
   void stopTimer() {
-    _stopwatch..stop();
+    _stopwatch.stop();
     _elapsedTime = _stopwatch.elapsed;
   }
 
@@ -31,7 +35,7 @@ class HomeViewProvider extends ChangeNotifier {
   }
 
   void updateActiveTool(CellState newTool) {
-    this._activeTool = newTool;
+    _activeTool = newTool;
     notifyListeners();
   }
 
@@ -41,15 +45,15 @@ class HomeViewProvider extends ChangeNotifier {
   }
 
   void updateSearchAlgo(SearchAlgo algorithm) {
-    this._selectedSearchAlgo = algorithm;
+    _selectedSearchAlgo = algorithm;
     resetResults();
     notifyListeners();
   }
 
   void resetResults() {
     _resultSteps = 0;
-    _elapsedTime = Duration();
-    for (var cell in _cells) {
+    _elapsedTime = const Duration();
+    for (final cell in _cells) {
       if (cell == CellState.solution || cell == CellState.visited) {
         _cells[_cells.indexOf(cell)] = CellState.path;
       }
@@ -63,13 +67,13 @@ class HomeViewProvider extends ChangeNotifier {
     }
 
     _resultSteps = 0;
-    _elapsedTime = Duration();
+    _elapsedTime = const Duration();
 
     notifyListeners();
   }
 
-  void toggleDelayed(bool value) {
-    _delayed = value;
+  void toggleDelayed({bool isDelayed}) {
+    _delayed = isDelayed;
     notifyListeners();
   }
 

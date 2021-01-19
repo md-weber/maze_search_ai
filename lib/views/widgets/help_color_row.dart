@@ -15,7 +15,7 @@ class HelpColorRow extends StatelessWidget {
           width: 50,
           color: color,
         ),
-        SizedBox(width: 16),
+        const SizedBox(width: 16),
         Text(helpText)
       ],
     );

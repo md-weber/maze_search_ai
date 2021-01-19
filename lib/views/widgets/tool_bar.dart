@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maze_search_ai/providers/home_view_provider.dart';
-import 'package:maze_search_ai/views/home-view.dart';
+import 'package:maze_search_ai/views/home_view.dart';
 import 'package:provider/provider.dart';
 
 class ToolBar extends StatelessWidget {
@@ -11,7 +11,7 @@ class ToolBar extends StatelessWidget {
       child: Row(
         children: [
           IconButton(
-              icon: Icon(Icons.wallet_membership),
+              icon: const Icon(Icons.wallet_membership),
               tooltip: "Wall",
               onPressed: () {
                 context
@@ -19,7 +19,7 @@ class ToolBar extends StatelessWidget {
                     .updateActiveTool(CellState.wall);
               }),
           IconButton(
-              icon: Icon(Icons.circle),
+              icon: const Icon(Icons.circle),
               tooltip: "Path",
               onPressed: () {
                 context
@@ -27,7 +27,7 @@ class ToolBar extends StatelessWidget {
                     .updateActiveTool(CellState.path);
               }),
           IconButton(
-              icon: Icon(Icons.play_arrow),
+              icon: const Icon(Icons.play_arrow),
               tooltip: "Start point",
               onPressed: () {
                 context
@@ -35,7 +35,7 @@ class ToolBar extends StatelessWidget {
                     .updateActiveTool(CellState.start);
               }),
           IconButton(
-              icon: Icon(Icons.recommend),
+              icon: const Icon(Icons.recommend),
               tooltip: "End point",
               onPressed: () {
                 context
@@ -44,8 +44,8 @@ class ToolBar extends StatelessWidget {
               }),
           const Spacer(),
           IconButton(
-              icon: Icon(Icons.clear),
-              color: Color(0xFFFF0000),
+              icon: const Icon(Icons.clear),
+              color: const Color(0xFFFF0000),
               tooltip: "Clear everything",
               onPressed: () {
                 context.read<HomeViewProvider>().resetAll();

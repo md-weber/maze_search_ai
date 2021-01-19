@@ -9,25 +9,23 @@ class HelpDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text("Help"),
-      content: Container(
-        child: Column(
-          children: [
-            Text(
-                "This application should help you to understand the search algorithms of the CS50 course of Harvard at edX. This course is for free 'Introduction to AI in Python'"),
-            SizedBox(height: 15),
-            HelpColorRow(color: Colors.green, helpText: "Start Point"),
-            SizedBox(height: 15),
-            HelpColorRow(color: Colors.red, helpText: "End Point"),
-            SizedBox(height: 15),
-            HelpColorRow(color: Colors.yellow, helpText: "Visited Tile"),
-            SizedBox(height: 15),
-            HelpColorRow(color: Colors.blue, helpText: "Path Solution"),
-            SizedBox(height: 15),
-            HelpColorRow(
-                color: Colors.black, helpText: "A wall the path cannot cross")
-          ],
-        ),
+      title: const Text("Help"),
+      content: Column(
+        children: const [
+          Text(
+              "This application should help you to understand the search algorithms of the CS50 course of Harvard at edX. This course is for free 'Introduction to AI in Python'"),
+          SizedBox(height: 15),
+          HelpColorRow(color: Colors.green, helpText: "Start Point"),
+          SizedBox(height: 15),
+          HelpColorRow(color: Colors.red, helpText: "End Point"),
+          SizedBox(height: 15),
+          HelpColorRow(color: Colors.yellow, helpText: "Visited Tile"),
+          SizedBox(height: 15),
+          HelpColorRow(color: Colors.blue, helpText: "Path Solution"),
+          SizedBox(height: 15),
+          HelpColorRow(
+              color: Colors.black, helpText: "A wall the path cannot cross")
+        ],
       ),
     );
   }

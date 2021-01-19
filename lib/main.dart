@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maze_search_ai/providers/home_view_provider.dart';
-import 'package:maze_search_ai/views/home-view.dart';
+import 'package:maze_search_ai/views/home_view.dart';
 import 'package:provider/provider.dart';
 
 void main() {
