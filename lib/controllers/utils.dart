@@ -4,8 +4,10 @@ class Node {
   final Tuple2<int, int> state;
   final String action;
   final Node parent;
+  final int manhattanNumber;
+  final int cost;
 
-  Node(this.state, {this.action, this.parent});
+  Node(this.state, {this.action, this.parent, this.manhattanNumber, this.cost});
 }
 
 class StackFrontier {
@@ -55,17 +57,34 @@ class GBFSFrontier extends StackFrontier {
   @override
   Node remove() {
     _frontier.sort((Node a, Node b) {
-      final aColumnDeltaToEnd = a.state.item1 - end.item1;
-      final bColumnDeltaToEnd = b.state.item1 - end.item1;
-      final aRowDeltaToEnd = a.state.item2 - end.item2;
-      final bRowDeltaToEnd = b.state.item2 - end.item2;
-
-      final aManhattanNumber = aColumnDeltaToEnd.abs() + aRowDeltaToEnd.abs();
-      final bManhattanNumber = bColumnDeltaToEnd.abs() + bRowDeltaToEnd.abs();
-
-      return bManhattanNumber.compareTo(aManhattanNumber);
+      return b.manhattanNumber.compareTo(a.manhattanNumber);
     });
-
     return _frontier.removeLast();
   }
+}
+
+class AStarFrontier extends StackFrontier {
+  final Tuple2<int, int> end;
+
+  AStarFrontier(this.end);
+
+  @override
+  Node remove() {
+    _frontier.sort((Node a, Node b) {
+      final aOverall = a.manhattanNumber + a.cost;
+      final bOverall = b.manhattanNumber + b.cost;
+
+      return bOverall.compareTo(aOverall);
+    });
+    return _frontier.removeLast();
+  }
+}
+
+int calculateManhattanNumber(
+  Tuple2<int, int> point,
+  Tuple2<int, int> endPoint,
+) {
+  final aColumnDeltaToEnd = point.item1 - endPoint.item1;
+  final aRowDeltaToEnd = point.item2 - endPoint.item2;
+  return aColumnDeltaToEnd.abs() + aRowDeltaToEnd.abs();
 }

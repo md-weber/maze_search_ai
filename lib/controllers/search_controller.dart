@@ -18,7 +18,7 @@ class SearchController {
     // Here our search starts
     int exploredTiles = 0;
 
-    final Node startNode = Node(provider.startPoint);
+    final Node startNode = Node(provider.startPoint, cost: 0);
     StackFrontier frontier;
 
     if (activeAlgorithm == SearchAlgo.dfs) {
@@ -27,6 +27,8 @@ class SearchController {
       frontier = QueueFrontier();
     } else if (activeAlgorithm == SearchAlgo.gbfs) {
       frontier = GBFSFrontier(provider.endPoint);
+    } else if (activeAlgorithm == SearchAlgo.a) {
+      frontier = AStarFrontier(provider.endPoint);
     } else {
       throw Exception("This is no valid Algorithm");
     }
@@ -77,7 +79,12 @@ class SearchController {
               .entries) {
         if (!explored.contains(entry.value) &&
             !frontier.containsState(entry.value)) {
-          final childNode = Node(entry.value, action: entry.key, parent: node);
+          final childNode = Node(entry.value,
+              action: entry.key,
+              parent: node,
+              cost: node.cost + 1,
+              manhattanNumber:
+                  calculateManhattanNumber(entry.value, provider.endPoint));
           frontier.add(childNode);
         }
       }
