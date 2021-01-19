@@ -87,6 +87,9 @@ class HomeViewProvider extends ChangeNotifier {
     updateSearchActive(searchActive: false);
     reCreateGrid();
 
+    endPoint = null;
+    startPoint = null;
+
     _resultSteps = 0;
     _elapsedTime = const Duration();
 
@@ -109,6 +112,11 @@ class HomeViewProvider extends ChangeNotifier {
   }
 
   Future<void> startSearch() async {
+    if (startPoint == null || endPoint == null) {
+      // TODO: Fix in Issue 5
+      return;
+    }
+
     resetResults();
     startTimer();
     updateSearchActive(searchActive: true);
