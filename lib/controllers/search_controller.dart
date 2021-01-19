@@ -114,8 +114,8 @@ class SearchController {
     final Map<String, Tuple2<int, int>> result = {
       "up": Tuple2(state.item1, state.item2 - 1),
       "down": Tuple2(state.item1, state.item2 + 1),
+      "right": Tuple2(state.item1 + 1, state.item2),
       "left": Tuple2(state.item1 - 1, state.item2),
-      "right": Tuple2(state.item1 + 1, state.item2)
     };
 
     result.removeWhere((key, value) {

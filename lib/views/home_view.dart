@@ -103,7 +103,7 @@ class HomeView extends StatelessWidget {
                     ),
                     DropdownMenuItem(
                       value: SearchAlgo.gbfs,
-                      child: Text("Greedy-Best Search"),
+                      child: Text("Greedy-Best First Search"),
                     ),
                     DropdownMenuItem(
                       value: SearchAlgo.a,
@@ -118,6 +118,13 @@ class HomeView extends StatelessWidget {
                         .updateSearchActive(searchActive: false);
                   },
                 ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: boxPadding,
+            child: Row(
+              children: [
                 SizedBox(
                   width: 150,
                   child: CheckboxListTile(
@@ -127,13 +134,6 @@ class HomeView extends StatelessWidget {
                         homeViewProvider.toggleDelayed(isDelayed: value);
                       }),
                 ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: boxPadding,
-            child: Row(
-              children: [
                 const Spacer(),
                 Tooltip(
                   message: getTooltip(homeViewProvider),
