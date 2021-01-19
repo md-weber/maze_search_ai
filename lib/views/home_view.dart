@@ -175,7 +175,7 @@ class HomeView extends StatelessWidget {
 
   String getTooltip(HomeViewProvider homeViewProvider) {
     if (homeViewProvider.isSearchActive) {
-      return "";
+      return "Cancel";
     } else if (homeViewProvider.checkForEndAndStartPoint) {
       return "Start";
     } else {
