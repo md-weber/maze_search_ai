@@ -135,27 +135,34 @@ class HomeView extends StatelessWidget {
             child: Row(
               children: [
                 const Spacer(),
-                ElevatedButton(
-                  onPressed: () async {
-                    homeViewProvider.isSearchActive
-                        ? context
-                            .read<HomeViewProvider>()
-                            .updateSearchActive(searchActive: false)
-                        : await context.read<HomeViewProvider>().startSearch();
-                  },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateColor.resolveWith(
-                      (Set<MaterialState> states) {
-                        return homeViewProvider.isSearchActive
-                            ? const Color(0xFFFF0000)
-                            : ThemeData().primaryColor;
-                      },
+                Tooltip(
+                  message: getTooltip(homeViewProvider),
+                  child: ElevatedButton(
+                    onPressed: homeViewProvider.checkForEndAndStartPoint
+                        ? () async {
+                            homeViewProvider.isSearchActive
+                                ? context
+                                    .read<HomeViewProvider>()
+                                    .updateSearchActive(searchActive: false)
+                                : await context
+                                    .read<HomeViewProvider>()
+                                    .startSearch();
+                          }
+                        : null,
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateColor.resolveWith(
+                        (Set<MaterialState> states) {
+                          return homeViewProvider.isSearchActive
+                              ? const Color(0xFFFF0000)
+                              : ThemeData().primaryColor;
+                        },
+                      ),
                     ),
-                  ),
-                  child: Text(
-                    homeViewProvider.isSearchActive
-                        ? "Cancel Search"
-                        : "Start Search",
+                    child: Text(
+                      homeViewProvider.isSearchActive
+                          ? "Cancel Search"
+                          : "Start Search",
+                    ),
                   ),
                 )
               ],
@@ -164,6 +171,16 @@ class HomeView extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String getTooltip(HomeViewProvider homeViewProvider) {
+    if (homeViewProvider.isSearchActive) {
+      return "";
+    } else if (homeViewProvider.checkForEndAndStartPoint) {
+      return "Start";
+    } else {
+      return "Add a missing Start or Endpoint";
+    }
   }
 
   void clearPoint(Tuple2<int, int> point, HomeViewProvider homeViewProvider) {

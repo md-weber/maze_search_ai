@@ -148,6 +148,8 @@ class HomeViewProvider extends ChangeNotifier {
 
   int get columns => _columns;
 
+  bool get checkForEndAndStartPoint => endPoint != null || startPoint != null;
+
   void updateSearchActive({bool searchActive}) {
     isSearchActive = searchActive;
     notifyListeners();
