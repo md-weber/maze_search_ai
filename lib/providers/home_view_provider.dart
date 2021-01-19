@@ -21,8 +21,9 @@ class HomeViewProvider extends ChangeNotifier {
   Duration _elapsedTime = const Duration();
   SearchController searchController;
 
+  bool isSearchActive = false;
+
   HomeViewProvider({this.searchController}) {
-    // TODO: Create rows and columns
     reCreateGrid();
   }
 
@@ -83,6 +84,7 @@ class HomeViewProvider extends ChangeNotifier {
   }
 
   void resetAll() {
+    updateSearchActive(searchActive: false);
     reCreateGrid();
 
     _resultSteps = 0;
@@ -109,6 +111,7 @@ class HomeViewProvider extends ChangeNotifier {
   Future<void> startSearch() async {
     resetResults();
     startTimer();
+    updateSearchActive(searchActive: true);
 
     await searchController.startSearch(
       _grid,
@@ -118,6 +121,7 @@ class HomeViewProvider extends ChangeNotifier {
     );
 
     stopTimer();
+    updateSearchActive(searchActive: false);
   }
 
   CellState get activeTool => _activeTool;
@@ -135,4 +139,9 @@ class HomeViewProvider extends ChangeNotifier {
   int get rows => _rows;
 
   int get columns => _columns;
+
+  void updateSearchActive({bool searchActive}) {
+    isSearchActive = searchActive;
+    notifyListeners();
+  }
 }

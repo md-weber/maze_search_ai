@@ -113,6 +113,9 @@ class HomeView extends StatelessWidget {
                   value: selectedSearchAlgo,
                   onChanged: (SearchAlgo value) {
                     context.read<HomeViewProvider>().updateSearchAlgo(value);
+                    context
+                        .read<HomeViewProvider>()
+                        .updateSearchActive(searchActive: false);
                   },
                 ),
                 SizedBox(
@@ -134,9 +137,26 @@ class HomeView extends StatelessWidget {
                 const Spacer(),
                 ElevatedButton(
                   onPressed: () async {
-                    await context.read<HomeViewProvider>().startSearch();
+                    homeViewProvider.isSearchActive
+                        ? context
+                            .read<HomeViewProvider>()
+                            .updateSearchActive(searchActive: false)
+                        : await context.read<HomeViewProvider>().startSearch();
                   },
-                  child: const Text("Start Search"),
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateColor.resolveWith(
+                      (Set<MaterialState> states) {
+                        return homeViewProvider.isSearchActive
+                            ? const Color(0xFFFF0000)
+                            : ThemeData().primaryColor;
+                      },
+                    ),
+                  ),
+                  child: Text(
+                    homeViewProvider.isSearchActive
+                        ? "Cancel Search"
+                        : "Start Search",
+                  ),
                 )
               ],
             ),

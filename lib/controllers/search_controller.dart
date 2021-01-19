@@ -31,7 +31,7 @@ class SearchController {
 
     final Set<Tuple2<int, int>> explored = {};
 
-    while (true) {
+    while (provider.isSearchActive) {
       if (frontier.isFrontierEmpty()) {
         throw Exception("There is no solution");
       }
@@ -78,6 +78,7 @@ class SearchController {
         }
       }
     }
+    return null;
   }
 
   void getMazeInformation(
