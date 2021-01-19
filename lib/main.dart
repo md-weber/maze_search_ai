@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:maze_search_ai/controllers/search_controller.dart';
 import 'package:maze_search_ai/providers/home_view_provider.dart';
 import 'package:maze_search_ai/views/home_view.dart';
 import 'package:provider/provider.dart';
@@ -18,7 +19,9 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: ChangeNotifierProvider(
-        create: (BuildContext context) => HomeViewProvider(),
+        create: (BuildContext context) => HomeViewProvider(
+          searchController: SearchController(),
+        ),
         child: HomeView(),
       ),
     );

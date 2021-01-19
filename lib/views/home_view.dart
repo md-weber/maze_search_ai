@@ -1,26 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:maze_search_ai/controllers/search_controller.dart';
-import 'package:maze_search_ai/controllers/search_controller_impl.dart';
+import 'package:maze_search_ai/constants.dart';
 import 'package:maze_search_ai/providers/home_view_provider.dart';
 import 'package:maze_search_ai/views/widgets/cell.dart';
+import 'package:maze_search_ai/views/widgets/grid_settings_widget.dart';
 import 'package:maze_search_ai/views/widgets/help_dialog.dart';
 import 'package:maze_search_ai/views/widgets/result_bar.dart';
 import 'package:maze_search_ai/views/widgets/tool_bar.dart';
 import 'package:provider/provider.dart';
+import 'package:tuple/tuple.dart';
 
 enum CellState { wall, path, start, end, visited, solution }
 enum SearchAlgo { dfs, bfs, a, gbs }
-
-const boxPadding = EdgeInsets.symmetric(horizontal: 32, vertical: 8);
 
 class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final homeViewProvider = context.watch<HomeViewProvider>();
-    final delayed = homeViewProvider.delayed;
     final activeTool = homeViewProvider.activeTool;
-    final cells = homeViewProvider.cells;
     final selectedSearchAlgo = homeViewProvider.selectedSearchAlgo;
 
     return Scaffold(
@@ -42,33 +39,52 @@ class HomeView extends StatelessWidget {
         children: [
           ToolBar(),
           ResultBar(),
+          GridSettingsWidget(),
           Expanded(
             flex: 8,
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: GridView.builder(
-                // TODO: Change to dynamic way
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 8,
-                ),
-                itemCount: cells.length,
-                itemBuilder: (context, index) {
-                  return Cell(
-                    type: cells[index],
-                    onTap: () {
-                      if (activeTool == CellState.start ||
-                          activeTool == CellState.end) {
-                        cleanOldStartingPoint(cells, activeTool);
-                      }
+                padding: const EdgeInsets.all(8.0),
+                child: GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: homeViewProvider.columns <= 0
+                        ? 1
+                        : homeViewProvider.columns,
+                  ),
+                  itemCount: homeViewProvider.columns * homeViewProvider.rows,
+                  itemBuilder: (context, index) {
+                    final col = (index % homeViewProvider.columns).toInt();
+                    final row = index ~/ homeViewProvider.columns;
 
-                      context
-                          .read<HomeViewProvider>()
-                          .updateCell(index, activeTool);
-                    },
-                  );
-                },
-              ),
-            ),
+                    return Cell(
+                      type: homeViewProvider.grid[col][row],
+                      onTap: () {
+                        if (activeTool == CellState.end) {
+                          clearPoint(
+                            homeViewProvider.endPoint,
+                            context.read<HomeViewProvider>(),
+                          );
+
+                          homeViewProvider.endPoint =
+                              Tuple2.fromList([col, row]);
+                        }
+
+                        if (activeTool == CellState.start) {
+                          clearPoint(
+                            homeViewProvider.startPoint,
+                            context.read<HomeViewProvider>(),
+                          );
+
+                          homeViewProvider.startPoint =
+                              Tuple2.fromList([col, row]);
+                        }
+
+                        context
+                            .read<HomeViewProvider>()
+                            .updateCell(Tuple2(col, row), activeTool);
+                      },
+                    );
+                  },
+                )),
           ),
           Padding(
             padding: boxPadding,
@@ -118,33 +134,7 @@ class HomeView extends StatelessWidget {
                 const Spacer(),
                 ElevatedButton(
                   onPressed: () async {
-                    // TODO: Remove the Dependency and inject it via Constructor Injection
-                    final SearchController searchController =
-                        SearchControllerImplementation();
-                    final homeViewProvider = context.read<HomeViewProvider>();
-                    homeViewProvider.resetResults();
-                    homeViewProvider.startTimer();
-
-                    // TODO: Get rid of the Switch method
-                    switch (selectedSearchAlgo) {
-                      case SearchAlgo.dfs:
-                        await searchController.startSearch(
-                            cells, homeViewProvider,
-                            deepFirstSearch: true, delayed: delayed);
-                        break;
-                      case SearchAlgo.bfs:
-                        await searchController.startSearch(
-                            cells, homeViewProvider,
-                            deepFirstSearch: false, delayed: delayed);
-                        break;
-                      case SearchAlgo.a:
-                        searchController.startA(cells);
-                        break;
-                      case SearchAlgo.gbs:
-                        searchController.startGBS(cells);
-                        break;
-                    }
-                    homeViewProvider.stopTimer();
+                    await context.read<HomeViewProvider>().startSearch();
                   },
                   child: const Text("Start Search"),
                 )
@@ -156,11 +146,9 @@ class HomeView extends StatelessWidget {
     );
   }
 
-  void cleanOldStartingPoint(List<CellState> cells, CellState activeTool) {
-    final oldStartingPoint = cells.indexOf(activeTool);
-
-    if (oldStartingPoint > 0) {
-      cells[oldStartingPoint] = CellState.path;
+  void clearPoint(Tuple2<int, int> point, HomeViewProvider homeViewProvider) {
+    if (point != null) {
+      homeViewProvider.updateCell(point, CellState.path);
     }
   }
 }

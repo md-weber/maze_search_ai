@@ -1,23 +1,41 @@
 import 'package:flutter/cupertino.dart';
+import 'package:maze_search_ai/controllers/search_controller.dart';
 import 'package:maze_search_ai/views/home_view.dart';
+import 'package:tuple/tuple.dart';
 
 class HomeViewProvider extends ChangeNotifier {
   CellState _activeTool;
 
-  // List<List<CellState>> _grid = [];
-  final List<CellState> _cells = [];
+  List<List<CellState>> _grid = [];
+
+  Tuple2<int, int> startPoint;
+  Tuple2<int, int> endPoint;
+
+  int _rows = 8;
+  int _columns = 8;
+
   bool _delayed = false;
   SearchAlgo _selectedSearchAlgo = SearchAlgo.dfs;
   num _resultSteps = 0;
   Stopwatch _stopwatch;
   Duration _elapsedTime = const Duration();
+  SearchController searchController;
 
-  HomeViewProvider() {
+  HomeViewProvider({this.searchController}) {
     // TODO: Create rows and columns
+    reCreateGrid();
+  }
 
-    for (var i = 0; i < 64; i++) {
-      cells.add(CellState.path);
-    }
+  void updateRows(int newRows) {
+    _rows = newRows;
+    reCreateGrid();
+    notifyListeners();
+  }
+
+  void updateColumns(int newColumns) {
+    _columns = newColumns;
+    reCreateGrid();
+    notifyListeners();
   }
 
   void startTimer() {
@@ -39,8 +57,8 @@ class HomeViewProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateCell(int index, CellState newState) {
-    _cells[index] = newState;
+  void updateCell(Tuple2<int, int> cell, CellState newState) {
+    _grid[cell.item1][cell.item2] = newState;
     notifyListeners();
   }
 
@@ -53,18 +71,19 @@ class HomeViewProvider extends ChangeNotifier {
   void resetResults() {
     _resultSteps = 0;
     _elapsedTime = const Duration();
-    for (final cell in _cells) {
-      if (cell == CellState.solution || cell == CellState.visited) {
-        _cells[_cells.indexOf(cell)] = CellState.path;
+
+    for (var i = 0; i < grid.length; i++) {
+      for (var j = 0; j < grid[i].length; j++) {
+        final cell = grid[i][j];
+        if (cell == CellState.solution || cell == CellState.visited) {
+          grid[i][j] = CellState.path;
+        }
       }
     }
   }
 
   void resetAll() {
-    cells.clear();
-    for (var i = 0; i < 64; i++) {
-      cells.add(CellState.path);
-    }
+    reCreateGrid();
 
     _resultSteps = 0;
     _elapsedTime = const Duration();
@@ -77,9 +96,33 @@ class HomeViewProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void reCreateGrid() {
+    _grid = [];
+    for (var columnIndex = 0; columnIndex < columns; columnIndex++) {
+      _grid.add([]);
+      for (var rowsIndex = 0; rowsIndex < rows; rowsIndex++) {
+        _grid[columnIndex].add(CellState.path);
+      }
+    }
+  }
+
+  Future<void> startSearch() async {
+    resetResults();
+    startTimer();
+
+    await searchController.startSearch(
+      _grid,
+      this,
+      activeAlgorithm: _selectedSearchAlgo,
+      delayed: delayed,
+    );
+
+    stopTimer();
+  }
+
   CellState get activeTool => _activeTool;
 
-  List<CellState> get cells => _cells;
+  List<List<CellState>> get grid => _grid;
 
   SearchAlgo get selectedSearchAlgo => _selectedSearchAlgo;
 
@@ -88,4 +131,8 @@ class HomeViewProvider extends ChangeNotifier {
   Duration get elapsedTime => _elapsedTime;
 
   bool get delayed => _delayed;
+
+  int get rows => _rows;
+
+  int get columns => _columns;
 }

@@ -1,5 +1,7 @@
+import 'package:tuple/tuple.dart';
+
 class Node {
-  final int state;
+  final Tuple2<int, int> state;
   final String action;
   final Node parent;
 
@@ -13,7 +15,7 @@ class StackFrontier {
     _frontier.add(node);
   }
 
-  bool containsState(int state) {
+  bool containsState(Tuple2<int, int> state) {
     final Node node = _frontier.firstWhere(
       (node) => node.state == state,
       orElse: () => null,
