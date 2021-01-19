@@ -46,3 +46,26 @@ class QueueFrontier extends StackFrontier {
     }
   }
 }
+
+class GBFSFrontier extends StackFrontier {
+  final Tuple2<int, int> end;
+
+  GBFSFrontier(this.end);
+
+  @override
+  Node remove() {
+    _frontier.sort((Node a, Node b) {
+      final aColumnDeltaToEnd = a.state.item1 - end.item1;
+      final bColumnDeltaToEnd = b.state.item1 - end.item1;
+      final aRowDeltaToEnd = a.state.item2 - end.item2;
+      final bRowDeltaToEnd = b.state.item2 - end.item2;
+
+      final aManhattanNumber = aColumnDeltaToEnd.abs() + aRowDeltaToEnd.abs();
+      final bManhattanNumber = bColumnDeltaToEnd.abs() + bRowDeltaToEnd.abs();
+
+      return bManhattanNumber.compareTo(aManhattanNumber);
+    });
+
+    return _frontier.removeLast();
+  }
+}

@@ -37,7 +37,7 @@ class ResultBar extends StatelessWidget {
         return "Breadth-First Search";
       case SearchAlgo.a:
         return "A*";
-      case SearchAlgo.gbs:
+      case SearchAlgo.gbfs:
         return "Greedy-Best Search";
       default:
         return "";

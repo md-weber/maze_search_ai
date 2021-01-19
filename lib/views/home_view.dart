@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
 enum CellState { wall, path, start, end, visited, solution }
-enum SearchAlgo { dfs, bfs, a, gbs }
+enum SearchAlgo { dfs, bfs, a, gbfs }
 
 class HomeView extends StatelessWidget {
   @override
@@ -102,7 +102,7 @@ class HomeView extends StatelessWidget {
                       child: Text("Breadth-First Search"),
                     ),
                     DropdownMenuItem(
-                      value: SearchAlgo.gbs,
+                      value: SearchAlgo.gbfs,
                       child: Text("Greedy-Best Search"),
                     ),
                     DropdownMenuItem(

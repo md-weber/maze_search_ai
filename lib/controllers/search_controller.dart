@@ -25,6 +25,10 @@ class SearchController {
       frontier = StackFrontier();
     } else if (activeAlgorithm == SearchAlgo.bfs) {
       frontier = QueueFrontier();
+    } else if (activeAlgorithm == SearchAlgo.gbfs) {
+      frontier = GBFSFrontier(provider.endPoint);
+    } else {
+      throw Exception("This is no valid Algorithm");
     }
 
     frontier.add(startNode);
